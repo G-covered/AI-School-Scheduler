@@ -1,8 +1,8 @@
-import fitz
+import pymupdf
 
 pdf_path = "syllabus.pdf"
 
-document = fitz.open(pdf_path)
+document = pymupdf.open(pdf_path)
 
 for page_number, page in enumerate(document):
     text = page.get_text()
