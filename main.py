@@ -11,3 +11,5 @@ for page_number, page in enumerate(document):
     print(text)
 
 document.close()
+
+# Checked
