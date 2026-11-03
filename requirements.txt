@@ -1,0 +1,7 @@
+# Tkinter ships with Python (on Linux: sudo apt install python3-tk)
+
+# Optional: read schedules from PDF files / PDF links
+pypdf>=4.0
+
+# Optional: fixes SSL certificate errors for links on macOS python.org builds
+certifi

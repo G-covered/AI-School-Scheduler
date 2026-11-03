@@ -1,21 +1,49 @@
 # Smart Scheduler
 
-## Project Description
+A desktop scheduler (Python + Tkinter) that builds an organised agenda from manually
+entered events plus links and documents that contain schedule information.
 
-Smart Scheduler is a Python-based desktop application designed to help students organize their academic responsibilities and personal schedules in one place.
+## Run
 
-The goal of this project is to provide a simple, user-friendly calendar where students can manage assignments, exams, study sessions, work schedules, and other personal commitments.
+```bash
+pip install -r requirements.txt      # optional extras (PDF support, SSL certs)
+python main.py
+```
 
-The application is being developed using **Python and Tkinter**, allowing users to launch it directly from their desktop.
+Requires Python 3.9+. Tkinter ships with Python (Linux: `sudo apt install python3-tk`).
 
-## Current Features
+## Supported sources
 
-- Manually enter schedule information.
-- Upload PDF, DOCX, and TXT documents.
-- Add website links containing schedule information.
-- Extract readable text from supported documents and public webpages.
-- Organize recognized schedule entries by weekday and time.
-- Display organized schedule information in a separate window.
+- Web links: HTML pages, `.ics` calendar feeds, PDFs
+- Files: `.txt .md .csv .ics .docx .html .pdf` (PDF needs `pypdf`)
+
+Your schedule is stored in `~/.smart_scheduler/schedule.json` by default
+(same format as the previous single-file version, so existing data loads as-is).
+
+## Project layout
+
+```
+Scheduler/
+├── main.py                     entry point
+├── models/
+│   ├── event.py                Event dataclass (+ time helpers, search, (de)serialising)
+│   └── source.py               Source dataclass (a link or a file)
+├── services/                   no Tkinter in here
+│   ├── text_parser.py          TextParser (free text) and ICalParser (.ics text)
+│   ├── document_reader.py      DocumentReader: fetch/read a Source -> events
+│   ├── conflict_detector.py    ConflictDetector: finds overlapping events
+│   ├── calendar_exporter.py    CalendarExporter: .ics / .csv output
+│   ├── event_storage.py        EventStorage: JSON load/save
+│   └── event_manager.py        EventManager: owns events + sources, ties services together
+└── ui/
+    ├── scheduler_app.py        SchedulerApp: main window, menu, toolbar, wiring
+    ├── calendar_view.py        CalendarView (month grid) and EventListView
+    ├── event_dialog.py         EventDialog: add/edit form
+    └── source_panel.py         SourcePanel: list of links/documents + Compile
+```
+
+Dependencies point one way: `ui -> services -> models`. The UI only talks to
+`EventManager`; everything in `models/` and `services/` can be tested without a display.
 
 ## Planned Features
 
@@ -26,15 +54,6 @@ The application is being developed using **Python and Tkinter**, allowing users 
 - **Local Storage:** Save schedules so they remain available after closing the application.
 - **Improved Interface:** Develop a cleaner and more user-friendly desktop experience.
 - **AI Integration (Future Goal):** Automatically identify assignments, exams, and due dates from uploaded syllabi.
-
-## Technologies
-
-- **Python** – Core application logic
-- **Tkinter** – Desktop graphical user interface
-- **pypdf** – PDF text extraction
-- **python-docx** – Word document processing
-- **BeautifulSoup** – HTML parsing
-- **Requests** – Webpage retrieval
 
 ## Project Goal
 
